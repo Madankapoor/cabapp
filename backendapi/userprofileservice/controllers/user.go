@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"github.com/MadanKapoor/cabapp/backendapi/userprofileservice/forms"
 	"github.com/MadanKapoor/cabapp/backendapi/userprofileservice/models"
 
 	"net/http"
@@ -64,18 +63,6 @@ func (ctrl UserController) Register(c *gin.Context) {
 
 //Logout ...
 func (ctrl UserController) Logout(c *gin.Context) {
-
-	au, err := authModel.ExtractTokenMetadata(c.Request)
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": "User not logged in"})
-		return
-	}
-
-	deleted, delErr := authModel.DeleteAuth(au.AccessUUID)
-	if delErr != nil || deleted == 0 { //if any goes wrong
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Invalid request"})
-		return
-	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Successfully logged out"})
 }

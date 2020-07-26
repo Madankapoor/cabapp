@@ -9,7 +9,6 @@ import (
 	"github.com/MadanKapoor/cabapp/backendapi/userprofileservice/db"
 	"github.com/gin-contrib/gzip"
 	"github.com/joho/godotenv"
-	uuid "github.com/twinj/uuid"
 
 	"github.com/gin-gonic/gin"
 )
