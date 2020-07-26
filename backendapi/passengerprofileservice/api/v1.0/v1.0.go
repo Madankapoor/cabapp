@@ -1,6 +1,9 @@
 package apiv1
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/Madankapoor/cabapp/backendapi/passengerprofileservice/api/v1.0/passenger"
+	"github.com/gin-gonic/gin"
+)
 
 func ping(c *gin.Context) {
 	c.JSON(200, gin.H{
@@ -13,7 +16,6 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	v1 := r.Group("/v1.0")
 	{
 		v1.GET("/ping", ping)
-		//auth.ApplyRoutes(v1)
-		//posts.ApplyRoutes(v1)
+		passenger.ApplyRoutes(v1)
 	}
 }

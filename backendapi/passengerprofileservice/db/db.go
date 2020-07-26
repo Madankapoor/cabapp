@@ -7,12 +7,14 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/go-gorp/gorp"
+	"github.com/Madankapoor/cabapp/backendapi/passengerprofileservice/models"
+	"github.com/gin-gonic/gin"
 	_redis "github.com/go-redis/redis/v7"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/golang-migrate/migrate"
 	"github.com/golang-migrate/migrate/database/mysql"
 	_ "github.com/golang-migrate/migrate/source/file"
+	"github.com/jinzhu/gorm"
 )
 
 //DB ...
@@ -20,33 +22,50 @@ type DB struct {
 	*sql.DB
 }
 
-var db *gorp.DbMap
+// MYSQL Docker -
+// docker stop cabapp
+// docker rm /cabapp
+// docker run --name cabapp  -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root -e MYSQL_USER=cabapp -e MYSQL_PASSWORD=cabapp -e MYSQL_DATABASE=passenger mysql:5.7.31
+
+var db *gorm.DB
 
 func dbinfo() string {
-	return fmt.Sprintf("%s:%s@/%s", os.Getenv("DB_USER"), os.Getenv("DB_PASS"), os.Getenv("DB_NAME"))
+	dataSource := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True",
+		os.Getenv("DB_USER"),
+		os.Getenv("DB_PASSWORD"),
+		os.Getenv("DB_HOSTNAME"),
+		os.Getenv("DB_PORT"),
+		os.Getenv("DB_NAME"))
+	return dataSource
 }
 
 //Init ...
 func Init() {
 	var err error
 	db, err = ConnectDB(dbinfo())
+	db.LogMode(true)
 	if err != nil {
 		log.Fatal(err)
 	}
+	db.AutoMigrate(models.Passenger{})
+	Migrate()
 }
 
 //ConnectDB ...
-func ConnectDB(dataSourceName string) (*gorp.DbMap, error) {
-	db, err := sql.Open("mysql", dataSourceName)
+func ConnectDB(dataSourceName string) (*gorm.DB, error) {
+	db, err := gorm.Open("mysql", dataSourceName)
 	if err != nil {
-		return nil, err
+		log.Fatal(err)
 	}
-	if err = db.Ping(); err != nil {
-		return nil, err
+	return db, err
+}
+
+// Inject BD into gin
+func Inject(db *gorm.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Set("db", db)
+		c.Next()
 	}
-	dbmap := &gorp.DbMap{Db: db, Dialect: gorp.PostgresDialect{}}
-	//dbmap.TraceOn("[gorp]", log.New(os.Stdout, "golang-gin:", log.Lmicroseconds)) //Trace database requests
-	return dbmap, nil
 }
 
 // Migrate is used to run db migrations. We don't use gorm but a wraper lib over it.
@@ -60,7 +79,7 @@ func Migrate() {
 		log.Fatal(err)
 	}
 	m, err := migrate.NewWithDatabaseInstance(
-		"file:///migrations",
+		"file://./migrations",
 		"mysql",
 		driver,
 	)
@@ -71,7 +90,7 @@ func Migrate() {
 }
 
 //GetDB ...
-func GetDB() *gorp.DbMap {
+func GetDB() *gorm.DB {
 	return db
 }
 

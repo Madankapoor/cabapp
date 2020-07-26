@@ -1,7 +1,7 @@
 package api
 
 import (
-	apiv1 "github.com/MadanKapoor/cabapp/backendapi/passengerprofileservice/api/v1.0"
+	apiv1 "github.com/Madankapoor/cabapp/backendapi/passengerprofileservice/api/v1.0"
 	"github.com/gin-gonic/gin"
 )
 

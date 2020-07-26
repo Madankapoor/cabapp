@@ -1,4 +1,4 @@
-module github.com/MadanKapoor/cabapp/backendapi/passengerprofileservice
+module github.com/Madankapoor/cabapp/backendapi/passengerprofileservice
 
 go 1.13
 
@@ -10,15 +10,10 @@ require (
 	github.com/go-redis/redis/v7 v7.4.0
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/golang-migrate/migrate v3.5.4+incompatible
-	github.com/golang-migrate/migrate/v4 v4.11.0 // indirect
-	github.com/jinzhu/gorm v1.9.15 // indirect
+	github.com/jinzhu/gorm v1.9.15
 	github.com/joho/godotenv v1.3.0
 	github.com/lib/pq v1.7.1
-	github.com/mattn/go-sqlite3 v2.0.3+incompatible // indirect
-	github.com/myesui/uuid v1.0.0 // indirect
-	github.com/poy/onpar v1.0.0 // indirect
+	github.com/stretchr/testify v1.6.1
 	github.com/twinj/uuid v1.0.0
-	github.com/ziutek/mymysql v1.5.4 // indirect
 	golang.org/x/crypto v0.0.0-20200709230013-948cd5f35899
-	gopkg.in/stretchr/testify.v1 v1.2.2 // indirect
 )
