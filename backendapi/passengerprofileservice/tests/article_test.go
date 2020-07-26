@@ -14,8 +14,8 @@ package tests
 // 	"net/http/httptest"
 // 	"testing"
 
-// 	"github.com/MadanKapoor/cabapp/backendapi/userprofileservice/controllers"
-// 	"github.com/MadanKapoor/cabapp/backendapi/userprofileservice/db"
+// 	"github.com/MadanKapoor/cabapp/backendapi/passengerprofileservice/controllers"
+// 	"github.com/MadanKapoor/cabapp/backendapi/passengerprofileservice/db"
 // 	"github.com/joho/godotenv"
 
 // 	"github.com/gin-gonic/gin"

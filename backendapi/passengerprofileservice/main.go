@@ -5,8 +5,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/MadanKapoor/cabapp/backendapi/userprofileservice/controllers"
-	"github.com/MadanKapoor/cabapp/backendapi/userprofileservice/db"
+	"github.com/MadanKapoor/cabapp/backendapi/passengerprofileservice/api"
+	"github.com/MadanKapoor/cabapp/backendapi/passengerprofileservice/db"
 	"github.com/gin-contrib/gzip"
 	"github.com/joho/godotenv"
 
@@ -37,19 +37,17 @@ func CORSMiddleware() gin.HandlerFunc {
 //Generate a unique ID and attach it to each request for future reference or use
 func RequestIDMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		uuid := uuid.NewV4()
-		c.Writer.Header().Set("X-Request-Id", uuid.String())
+		//uuid := uuid.NewV4()
+		//c.Writer.Header().Set("X-Request-Id", uuid.String())
 		c.Next()
 	}
 }
-
-var auth = new(controllers.AuthController)
 
 //TokenAuthMiddleware ...
 //JWT Authentication middleware attached to each request that needs to be authenitcated to validate the access_token in the header
 func TokenAuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		auth.TokenValid(c)
+		//auth.TokenValid(c)
 		c.Next()
 	}
 }
@@ -71,26 +69,15 @@ func main() {
 
 	//Start Mysql database
 	db.Init()
-
+	//Database Migration
+	db.Migrate()
 	//Start Redis on database 1 - it's used to store the JWT but you can use it for anythig else
 	//Example: db.GetRedis().Set(KEY, VALUE, at.Sub(now)).Err()
 	db.InitRedis("1")
 
-	v1 := r.Group("/v1")
-	{
-		/*** START USER ***/
-		user := new(controllers.UserController)
+	// Router Setup
+	api.ApplyRoutes(r)
 
-		v1.POST("/user/login", user.Login)
-		v1.POST("/user/register", user.Register)
-		v1.GET("/user/logout", user.Logout)
-
-		/*** START AUTH ***/
-		auth := new(controllers.AuthController)
-
-		//Rerfresh the token when needed to generate new access_token and refresh_token for the user
-		v1.POST("/token/refresh", auth.Refresh)
-	}
 	port := os.Getenv("PORT")
 
 	if os.Getenv("ENV") == "PRODUCTION" {
