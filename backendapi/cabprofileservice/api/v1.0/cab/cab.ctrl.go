@@ -9,15 +9,16 @@ import (
 )
 
 func create(c *gin.Context) {
-	var cab models.Cab
+	var cab models.CabInput
 	if err := c.BindJSON(&cab); err != nil {
 		c.AbortWithStatusJSON(400, gin.H{
 			"status": false, "message": err.Error(),
 		})
 		return
 	}
-	cabservice.Create(c, &cab)
-	c.JSON(200, cab)
+	cabModel := cab.GetCabModel()
+	cabservice.Create(c, cabModel)
+	c.JSON(200, *cabModel)
 }
 
 func list(c *gin.Context) {
