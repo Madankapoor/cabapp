@@ -112,7 +112,7 @@ But for bussiness availability is more important. Thus we should design AP syste
 8. Passenger Location.
 
 ### Relations
-
+Cab has a Cab Type. n-1
 Cab Driver owns Cab. 1-1
 Passenger books Trips. 1-n
 Cab has location. 1-1
